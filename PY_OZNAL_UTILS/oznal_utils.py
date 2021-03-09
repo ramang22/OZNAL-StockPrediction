@@ -32,4 +32,5 @@ class OZNAL_UTIL:
         else:
             return companies    
 
+print("pepege")
 
