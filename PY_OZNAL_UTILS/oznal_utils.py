@@ -17,7 +17,7 @@ class OZNAL_UTIL:
             if len(stock) == 0:
                 None
             else:
-                stock['Name']=symbol
+                stock['symbol']=symbol
                 stock_final = stock_final.append(stock,sort=False)
         except Exception:
             None
@@ -32,5 +32,4 @@ class OZNAL_UTIL:
         else:
             return companies    
 
-print("pepege")
 
