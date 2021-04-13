@@ -24,11 +24,15 @@ class OZNAL_UTIL:
         return stock_final
 
     def getStockSymbols(self, onlySymbols=True):
-        url="https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
+        # url="https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_csv/data/7665719fb51081ba0bd834fde71ce822/nasdaq-listed_csv.csv"
+        # s = requests.get(url).content
+        # companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
+        url="http://ftp.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt"
         s = requests.get(url).content
-        companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
+        #companies = pd.read_csv(io.StringIO(s.decode('utf-8')))
+        read_file = pd.read_csv(url,delimiter="|")
         if onlySymbols:
-            return companies['Symbol'].tolist()
+            return read_file['Symbol'].tolist()
         else:
             return companies    
 
