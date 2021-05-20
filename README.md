@@ -69,3 +69,7 @@ nemáme priame dáta, ale môžu pomôcť dokázať vase hypotézy?
 * https://www.kaggle.com/unanimad/reddit-rwallstreetbets
 * https://www.kaggle.com/mattpodolak/rwallstreetbets-posts-and-comments?select=wallstreetbets_posts.csv
 * https://www.kaggle.com/gpreda/reddit-wallstreetsbets-posts
+
+## Mozno pomoze 
+* https://bookdown.org/rdpeng/exdata/exploratory-graphs.html
+* https://github.com/johnmyleswhite/ML_for_Hackers
