@@ -1,0 +1,78 @@
+## Pôvod dát
+
+Naše dáta o jednotlivých príspevkov z redditu pochádzajú z dvoch datasetov zo stránky keggle.com
+
+1. Posts - https://www.kaggle.com/gpreda/reddit-wallstreetsbets-posts
+2. Comments - https://www.kaggle.com/mattpodolak/rwallstreetbets-posts-and-comments
+
+Dáta o cene jednotlivých akcií sa nám podarilo získať z [yahoo finance](https://finance.yahoo.com/), pomocou python balíčka [yfinance](https://pypi.org/project/yfinance/).
+
+### Posts data
+
+```{r}
+df <- read.csv("../data/raw_data/posts.csv")
+summary(df)
+```
+
+Dataset o príspevkoch obsauje 47 000 záznamov a má 8 stĺpcov. 
+
+* Title - text titulku príspevku
+
+* Score - skóre príspevku na fóre
+
+* Id - identifikátor príspevku
+
+* url - url na príspekov
+
+* comms_num - počet komentárov pod príspevkom
+
+* created - timestamp, kedy bol daný príspevok vytvorený
+
+* body - telo príspevku
+
+* timestamp - timestamp
+
+**Head postov vyzerá nasledovne:**
+![](assets/posts_head_raw.png)
+
+### Comments data
+
+```{r}
+# Zakomentovali sme tento riadok lebo hrozne dlho trva nacitanie 4gb dat...
+# namiesto vypisu sme pouzili len screenshot
+#df <- read.csv("../data/raw_data/comments.csv")
+#summary(df)
+print("Odkomentovat")
+```
+![](assets/comments_summary.png)
+
+Dataset comments obsahuje 9.5 milióna záznamov pričim má 37 stĺpcov. V nasledujúcej časti opíšeme len stĺpce, s ktorýme sme pracovali pri tvorbe datasetu.
+
+**Použité stĺpce :**
+
+* body - Text komentáru
+
+* parent_id - identifikátor jednotlivých postov
+
+* id - id komentára
+
+* created_utc - čas keby bol daný komentár uverejnený
+
+* score - ohodnotenie daného komentára
+
+## Spracovanie dát
+
+Spracovanie dát je jediná časť projektu, v ktorej sme sa rozhodli využiť Python namiesto Rka a to z dôvodu že v pythone sme skúsenejší a vieme pracovať rýchlejšie a efektívnejšie. Všetky python notebooku sú zverejnené v zložke python_code. Práve efektivita bola potrebná pri takomto množstve dát, ktoré sme museli spracovať. Pre rýchlejšie spracovanie dát sme využili python rozhranie pre [Apache Spark](https://spark.apache.org/) - [pyspark](https://spark.apache.org/docs/latest/api/python/). Taktiež sme využili google cloud computing platformu, na ktorej sme spúštali pySpark aby sme mali k dispozícii väčší výpočtový výkon. 
+
+Pre zaujímavosť celé trvanie spracovania dát na google cloud computing platforme trvalo približne 10 hodín. 
+
+**Spracovanie dát vyzeralo nasledovne:**
+
+1. Najskôr sme jednotlivé datasety vyčistili od nepotrebných stĺpcov a zredukovali počet dát len na záznamy od 1.1.2019 a neskôr. Chceme pracovat len v tomto časovom úseku lebo práve v tomto čase sa daný subreddit stal populárnym. Celý tento cyklus je reprezentovaný v prvom python súbore.
+
+2. Ako druhý krok prišla práca v pySparku... TODO TOMAS
+
+3. Nakoniec sme museli dataset komentárov a príspevkov spojiť do jedného. Zvolili sme nasledujúci systém. Každý stock symbol môže byť reprezentovaný v datasete len raz v jednom konkrétnom dni. Takže sme počet riadkov zredukovali na $max\_num\_rows = ticker\_count * num\_dates$. Pričom sa jednotlivé parametre tickerov sčítavajú. Potom sme priradili stock market stĺpce k jednotlivým ďnom a tickerom a takto nám vznikol dataset. Túto poslednú časť môžete nájst v druhom python súbore.  
+
+Obrázok znázorňuje grafiky akým cyklom museli prejsť jednotlivé dáta.
+![](assets/sparkcycle.png)
