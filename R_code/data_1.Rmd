@@ -62,7 +62,7 @@ Dataset comments obsahuje 9.5 milióna záznamov pričim má 37 stĺpcov. V nasl
 
 ## Spracovanie dát
 
-Spracovanie dát je jediná časť projektu, v ktorej sme sa rozhodli využiť Python namiesto Rka a to z dôvodu že v pythone sme skúsenejší a vieme pracovať rýchlejšie a efektívnejšie. Všetky python notebooku sú zverejnené v zložke python_code. Práve efektivita bola potrebná pri takomto množstve dát, ktoré sme museli spracovať. Pre rýchlejšie spracovanie dát sme využili python rozhranie pre [Apache Spark](https://spark.apache.org/) - [pyspark](https://spark.apache.org/docs/latest/api/python/). Taktiež sme využili google cloud computing platformu, na ktorej sme spúštali pySpark aby sme mali k dispozícii väčší výpočtový výkon. 
+Spracovanie dát je jediná časť projektu, v ktorej sme sa rozhodli využiť Python namiesto Rka a to z dôvodu že v pythone sme skúsenejší a vieme pracovať rýchlejšie a efektívnejšie. Všetky python notebooky sú zverejnené v zložke python_code. Práve efektivita bola potrebná pri takomto množstve dát, ktoré sme museli spracovať. Pre rýchlejšie spracovanie dát sme využili python rozhranie pre [Apache Spark](https://spark.apache.org/) - [pyspark](https://spark.apache.org/docs/latest/api/python/). Taktiež sme využili google cloud computing platformu, na ktorej sme spúštali pySpark aby sme mali k dispozícii väčší výpočtový výkon. 
 
 Pre zaujímavosť celé trvanie spracovania dát na google cloud computing platforme trvalo približne 10 hodín. 
 
@@ -70,7 +70,7 @@ Pre zaujímavosť celé trvanie spracovania dát na google cloud computing platf
 
 1. Najskôr sme jednotlivé datasety vyčistili od nepotrebných stĺpcov a zredukovali počet dát len na záznamy od 1.1.2019 a neskôr. Chceme pracovat len v tomto časovom úseku lebo práve v tomto čase sa daný subreddit stal populárnym. Celý tento cyklus je reprezentovaný v prvom python súbore.
 
-2. Ako druhý krok prišla práca v pySparku... TODO TOMAS + tu treba opisat ze ako to prebiehalo aj to ze sme po konzultacii to pustali este raz a pridavali sentiment
+2. Ako druhý krok prišla práca v pySparku. Pre veľký objem dát sme sa rozhodli využiť naše skúsenosti so Spark pipeline implementáciou. Pôvodne sme potrebovali dáta transformovať tak, aby vznikol nový stĺpec obsahujúci symboly akcií spomenutých v danom texte. K tomuto sme vytvorili Python Notebook (spark_pipeline.ipnyb), ktorý s využitím Apache Spark serveru tokenizoval jednotlivé texty datasetu a porovnával ich so všetkými známymi symbolmi akcií. Po prvej konzultácii sme sa rozhodli túto map reduce pipeline rozšíriť tak aby analyzovala sentiment jednotlivých tokenov a vytvárala tak celkový sentiment každého riadku datasetu. K tomuto sme sa rozhodli z dôvodu nedostatočného výpočtového výkonu využiť cluster na Google Cloud Platforme. Spark job riešiaci túto úlohu sa nachádza v súbore spark_job.py. S využitím clustra (1 master 4 slaves) trvala celková transformácia datasetu približne 6 hodín.  
 
 3. Nakoniec sme museli dataset komentárov a príspevkov spojiť do jedného. Zvolili sme nasledujúci systém. Každý stock symbol môže byť reprezentovaný v datasete len raz v jednom konkrétnom dni. Takže sme počet riadkov zredukovali na $max\_num\_rows = ticker\_count * num\_dates$. Pričom sa jednotlivé parametre tickerov sčítavajú. Potom sme priradili stock market stĺpce k jednotlivým ďnom a tickerom a takto nám vznikol dataset. Túto poslednú časť môžete nájst v druhom python súbore.  
 
