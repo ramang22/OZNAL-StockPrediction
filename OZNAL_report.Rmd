@@ -55,6 +55,8 @@ Prvá kapitola sa zameriava na právu s raw neupravenými dátami, objasňuje ic
 
 # Prieskumná analýza dát a definícia pracovných hypotéz
 
+Druhá kapitola zameraná na analýzu dát a predstavenie si prvotných hypotéz. V analýze dát sa nachádza párová analýza dát a taktiež exploratory data analysis (EDA).
+
 ```{r child = 'R_code/analysis_2.Rmd'}
 
 ```

@@ -1,6 +1,15 @@
+
+```{r}
+# imports
+source("../R_code/OZNAL_utils.R")
+```
+ 
+
 ## Hypotézy
 
 Na zákldade dostupných dát a našich cielov sme identifikovali nasledovné hypotézy.
+
+TODO Argumenty pre hypothesis-free vs hypothesis-driven vs endpointy
 
 ### Hypotéza 1 
 
@@ -36,3 +45,18 @@ Dokáže reddit ovplyvniť rast stocku priebežne (v celých dátach) od 2019 do
 Dokáže reddit ovplyvniť rast stocku dopredu o týždeň? 
 
 **Overenie** : Korelácia medzi šumom a maximálnou hodnotou stocku dopredu
+
+## Základny opis dát
+
+```{r}
+
+```
+
+
+## Prečo sú naše dáta reprezentatívne?
+
+## Prečo je náš dataset unikátny
+
+## Exploratory data analysis
+
+## Párová analýza
