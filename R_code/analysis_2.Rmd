@@ -1,0 +1,38 @@
+## Hypotézy
+
+Na zákldade dostupných dát a našich cielov sme identifikovali nasledovné hypotézy.
+
+### Hypotéza 1 
+
+Dokáže "Šum" na reddite ohľadom jedného symbolu ovplyvniť jeho rast na dennej baze (change)?
+
+**Overenie** : Potvrdenie existencie korelácie medzi jednotlivými stĺpcami šumu a stĺpcom change, následne pomocou testu dokázať že sú závislé.  
+
+### Hypotéza 2 
+
+Ovplyní zmena hodnoty stocku sentiment jednotlivých príspevkov? 
+
+**Overenie** : Potvrdenie existencie korelácie medzi stĺpcom change a stĺpcom sentiment, následne pomocou testu dokázať že sú závislé.  
+
+### Hypotéza 3 
+
+Čím je väčší "šum" na reddite tým je väčšia volume stocku? 
+
+**Overenie** : Potvrdenie existencie korelácie mmedzi jednotlivými stĺpcami šumu a stĺpcom volume, následne pomocou testu dokázať že sú závislé.  
+
+### Hypotéza 4 
+
+Existuje súvislosť medzi rastúcimi stockmi, na základe "šumu" z redditu?
+
+**Overenie** : Potvrdenie existencie korelácie mmedzi zmenou šumu a stĺpcami, ktoré reprezentujú hodnoty stocku, následne pomocou testu dokázať že sú závislé. 
+
+### Hypotéza 5 
+Dokáže reddit ovplyvniť rast stocku priebežne (v celých dátach) od 2019 do 2021? 
+
+**Overenie** : Korelácia ???
+
+### Hypotéza 6 
+
+Dokáže reddit ovplyvniť rast stocku dopredu o týždeň? 
+
+**Overenie** : Korelácia medzi šumom a maximálnou hodnotou stocku dopredu

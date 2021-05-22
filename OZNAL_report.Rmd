@@ -1,0 +1,82 @@
+---
+title: "Stock Market prediction based on /r/Wallstreetbets"
+author: "Tomáš Bedej & William Brach"
+date: "24/05/2021"
+output:
+    html_document:
+      toc: true
+      toc_depth: 4
+      toc_float: 
+        collapsed: false
+        smooth_scroll: false 
+      number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Úvod
+
+
+:::: {style="display: flex;"}
+
+::: {}
+![](assets/reddit-logo.png)
+
+:::
+
+::: {}
+Témou projektu je predikcia zmeny hodnoty akcie na základe vyplyvu populárneho internetového fóra reddit. Konkrétnejšie sa jedná o subreddit [/r/wallstreetbets](https://www.reddit.com/r/wallstreetbets/). Vybratá téma je taktiež veľmi zaujimavá z pohľadu analýzy dát. Práve v roku 2021 sa podarilo subredditu wallstreetbets ovplyňiť cenu akcií amerického obchodu GameStop (GME). Cenu akcií ovplyvnili samozrejme vo svoj prospech, kde hodnota jednej akcie vzrástla z 15 USD až na 200 USD. Bude zaujímavé sledovať prvá tento pattern a pokúsiť sa ho objaviť aj pri iných akciách v minulosti. 
+:::
+
+::::
+
+## Štruktúra projektu
+
+Štrukturú odovzdaného projektu je nasledovná. Kód ku jednotlivým kapitolám sa nachádza v samostatných Rmd súboroch, ktoré sa následne spájajú v hlavnom report Rmd súbore.
+
+* Directory/
+
+  * Data/ - zložka s jednotlivými datasetmi
+
+  * R_code/ - zložka s jednotlívými súbormi Rkového kódu
+
+  * Python_code/ - zložka, ktorej sa nachádza Python kód
+  
+  * assets/ - obrázky pre výsledný dokument
+
+# Dáta
+
+Prvá kapitola sa zameriava na právu s raw neupravenými dátami, objasňuje ich pôvod a prvé transformácie do datasetu vhodného na analýzu.
+
+```{r child = 'R_code/data_1.Rmd'}
+```
+
+# Prieskumná analýza dát a definícia pracovných hypotéz
+
+```{r child = 'R_code/analysis_2.Rmd'}
+
+```
+
+
+# Čistenie dát pre ďalšie analýzy
+
+```{r child = 'R_code/cleaning_3.Rmd'}
+
+```
+
+
+# Štatistické učenie, zhlukové analýzy a nachádzanie vnútorných vzorcov v dátach
+
+```{r child = 'R_code/modeling_4.Rmd'}
+
+```
+
+
+# Bayesovská štatistika
+
+```{r child = 'R_code/bayes_5.Rmd'}
+
+```
+
