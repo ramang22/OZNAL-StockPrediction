@@ -2,6 +2,12 @@
 ```{r}
 # imports
 source("../R_code/OZNAL_utils.R")
+library("readxl")
+library(magrittr)
+library(corrplot)
+library(ggplot2)
+library(nortest)
+`%>%` <- magrittr::`%>%` # pipe operátor
 ```
  
 
@@ -49,14 +55,219 @@ Dokáže reddit ovplyvniť rast stocku dopredu o týždeň?
 ## Základny opis dát
 
 ```{r}
+df <- read.csv("../data/dataset_final.csv")
+df <- df[,-2]
+head(df)
+```
+```{r}
+summary(df)
+```
+Finálny dataset obsahuje 98208 riadkov a má 25 stĺpcov. 
 
+Taktiež sme sledovali či sú dáta z normálového rozdelnia pomocou Anderson-Darling testu. Tento test sme použili namiesto Shapiro–Wilk testu lebo dokáže pracovať aj s viac ako 5000 záznami. Pri použítí Anderson-Darlingu testu nám vyšlo že žiadne dáta niesu z normálovej distribúcie, takže to je prvý krok, ktorý budeme musiet vykonať pri čistený datasetu.
+
+**Stĺpce sú nasledovné:**
+
+* upvote_ratio - Tento stĺpec hovorí o pomere $upvote/downvote$ na príspevkoch pre jednen ticker v konkrétnom dni. 
+
+* symbol - označenie akcie, ticker.
+
+* date - timestamp, konkrétny deň.
+
+* score - $count\_upvotes-count\_downvotes$, ako boli príspevky hodnotené.
+ 
+```{r}
+ad.test(df$score)
+```
+ 
+ 
+* awards - koľko krát boli dané príspevku, pre konkrétny ticker "boostnuté".
+
+```{r}
+ad.test(df$awards)
 ```
 
+
+* sentiment - NLP hodnota, ktorá reprezentuje či príspevky a komentáre pre daný ticker mali pozitívny alebo negatívny sentiment.
+
+```{r}
+ad.test(df$sentiment)
+```
+
+
+* count - počet, ktorý hovorí o tom koľko krát bol daný ticker spomenutý v daný deň.
+
+```{r}
+ad.test(df$count)
+```
+
+
+* Open - otváracia cena akcie v daný deň.
+
+```{r}
+ad.test(df$Open)
+```
+
+
+* High - maximálna cena akcie v daný deň.
+
+```{r}
+ad.test(df$High)
+```
+
+
+* Low - minimálna cena akcie v daný deň.
+
+```{r}
+ad.test(df$Low)
+```
+
+
+* Close - zatváracia cena akcie v daný deň. 
+
+```{r}
+ad.test(df$Close)
+```
+
+* Adj.Close - stock price ktory je adjusted tak aby reflektovaö naozajstnu cenu
+
+```{r}
+ad.test(df$Adj.Close)
+```
+
+* Volume - cena predaných akcií v daný deň.
+
+```{r}
+ad.test(df$Volume)
+```
+
+* float - počet akcií 
+
+```{r}
+ad.test(df$float)
+```
+
+* spread - $High/Close$, rozsah zmeny ceny akcie v daný deň
+
+```{r}
+ad.test(df$spread)
+```
+
+* change - $Close/Open$, ako sa zmenila cena akcie v daný deň
+
+```{r}
+ad.test(df$change)
+```
+
+* peak - $High/Open$, o koľko narástla maximálna cena akcie v daný deň
+
+```{r}
+ad.test(df$peak)
+```
+
+* trough - $Open/Low$, o koľko klesla hodota akcie v daný deň
+
+```{r}
+ad.test(df$trough)
+```
+
+* min7 - minimálna hodnota akcie v uplynutých 7 dní
+
+```{r}
+ad.test(df$min7)
+```
+
+* max7 - maximálna hodnota akcie v uplynutých 7 dní
+
+```{r}
+ad.test(df$max7)
+```
+
+* min30 - minimálna hodota akcie v uplynutých 30 dní
+
+```{r}
+ad.test(df$min30)
+```
+
+* max30 - maximálna hodnota akcie v uplynutých 30 dní
+
+```{r}
+ad.test(df$max30)
+```
+
+* max7plus - maximálna cena akcie v nasledujúcich 7 dňoch
+
+```{r}
+ad.test(df$max7plus)
+```
+
+* min7plus - minimálna cena akcie v nasledujúcich 7 dňoch
+
+```{r}
+ad.test(df$min7plus)
+```
+
+* marketCap - hodna všetkých akcií konkrétneho tickera v daný deň
+
+```{r}
+ad.test(df$marketCap)
+```
+
+
+## Exploratory data analysis
+
+### Upvote Ratio
+
+### Symbol
+
+### Date
+
+### Score
+
+### Awards
+
+### Sentiment
+
+### Count
+
+### Open
+
+### High
+
+### Low
+
+### Close
+
+### Adj.Close
+
+### Volume
+
+### Float
+
+### Spread
+
+### Change
+
+### Peak
+
+### Trough
+
+### Min7 - days
+
+### Max7 - days
+
+### Min30 - days
+
+### Max 30- days
+
+### Max7Plus - days
+
+### Min7Plus - days
+
+### Marketcap
+
+## Párová analýza
 
 ## Prečo sú naše dáta reprezentatívne?
 
 ## Prečo je náš dataset unikátny
-
-## Exploratory data analysis
-
-## Párová analýza
