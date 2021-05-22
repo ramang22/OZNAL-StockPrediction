@@ -70,9 +70,70 @@ Pre zaujímavosť celé trvanie spracovania dát na google cloud computing platf
 
 1. Najskôr sme jednotlivé datasety vyčistili od nepotrebných stĺpcov a zredukovali počet dát len na záznamy od 1.1.2019 a neskôr. Chceme pracovat len v tomto časovom úseku lebo práve v tomto čase sa daný subreddit stal populárnym. Celý tento cyklus je reprezentovaný v prvom python súbore.
 
-2. Ako druhý krok prišla práca v pySparku... TODO TOMAS
+2. Ako druhý krok prišla práca v pySparku... TODO TOMAS + tu treba opisat ze ako to prebiehalo aj to ze sme po konzultacii to pustali este raz a pridavali sentiment
 
 3. Nakoniec sme museli dataset komentárov a príspevkov spojiť do jedného. Zvolili sme nasledujúci systém. Každý stock symbol môže byť reprezentovaný v datasete len raz v jednom konkrétnom dni. Takže sme počet riadkov zredukovali na $max\_num\_rows = ticker\_count * num\_dates$. Pričom sa jednotlivé parametre tickerov sčítavajú. Potom sme priradili stock market stĺpce k jednotlivým ďnom a tickerom a takto nám vznikol dataset. Túto poslednú časť môžete nájst v druhom python súbore.  
 
 Obrázok znázorňuje grafiky akým cyklom museli prejsť jednotlivé dáta.
 ![](assets/sparkcycle.png)
+
+
+**vzniknutý dataset po všetkých úpravach vyzeral nasledovne:**
+
+```{r}
+df <- read.csv("../data/final_spark.csv")
+summary(df)
+```
+Následne bolo potrebné vypočítať ďalšie dôležité stĺpce. Na ktoré sme už použili kód v Rku.
+
+```{r}
+#Taktiež sme tento blok kódu zakomentovali z dôvodu, dlhého vytvárania dokumentu.
+
+# df['spread'] <- round(df['High'] / df['Low'] - 1,digits=3 )
+# df['change'] <- round(df['Close'] / df['Open'] - 1,digits=3 )
+# df['peak'] <- round(df['High'] / df['Open'] - 1,digits=3 )
+# df['trough'] <- round(df['Open'] / df['Low'] - 1,digits=3 )
+# df['marketCap'] <- round(df['Close'] * df['float'] ,digits=3 )
+# df$date <- as.Date(df$date)
+# df$min7 <- 0
+# df$max7 <- 0
+# df$min30 <- 0
+# df$max30 <- 0
+# df$max7plus <- 0
+# df$min7plus <- 0
+# df$max7plus <- 0
+# df$min7plus <- 0
+# 
+# f <- function(x) {
+#  symbol = x['symbol']
+#   date <- as.Date(x['date'])
+#   startDate = date - 7
+#   endDate = date
+#   df7 <- df$High[df$symbol == symbol & df$date >= startDate & df$date <= endDate]
+#   max7 <-  max(df7)
+#   min7 <-  min(df7)
+# 
+#   startDate = date - 30
+#   df30 <- df$High[df$symbol == symbol & df$date >= startDate & df$date <= endDate]
+#   max30 <-  max(df30)
+#   min30 <-  min(df30)
+# 
+#  startDate = date
+#   endDate = date + 7
+#   df30 <- df$High[df$symbol == symbol & df$date >= startDate & df$date <= endDate]
+#   max7plus <-  max(df30)
+#   min7plus <-  min(df30)
+#   c(max7, min7, max30, min30,max7plus, min7plus )
+# }
+
+# results <- apply(df, 1,f)
+# df$min7 <- results[2,]
+# df$max7 <- results[1,]
+# df$min30 <- results[4,]
+# df$max30 <- results[3,]
+# df$max7plus <- results[5,]
+# df$min7plus <- results[6,]
+# head(df)
+# write.csv(df,file="../data/dataset_final.csv")
+```
+Novo vziknuté stĺpce sú dôležité pre analyzovanie stock marketu. Tieto stĺpce sa považujú za industry standard pre sledovanie pohybu jednotlivých akcií. Na konci tohoto spracovania dát dostávame náš finálny dataset, s ktorým pracujeme v analýze a nasledujúcich krokoch.
