@@ -64,6 +64,8 @@ Druhá kapitola zameraná na analýzu dát a predstavenie si prvotných hypotéz
 
 # Čistenie dát pre ďalšie analýzy
 
+Tretia kapitola, v ktorej sa venujeme čisteniu a opravovaniu datasetu na základe problémov, ktoré sme objavili v druhej kapitole. Taktiež sa tu nachádza znova analýza, po tom ako sme upravili jednotlivé distribúcie dát.
+
 ```{r child = 'R_code/cleaning_3.Rmd'}
 
 ```

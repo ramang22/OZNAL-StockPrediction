@@ -7,6 +7,10 @@ library(magrittr)
 library(corrplot)
 library(ggplot2)
 library(nortest)
+library(RColorBrewer)
+library(tidyverse)
+library(gridExtra)
+library(knitr)
 `%>%` <- magrittr::`%>%` # pipe operátor
 ```
  
@@ -212,9 +216,23 @@ ad.test(df$min7plus)
 ```{r}
 ad.test(df$marketCap)
 ```
+Vidíme zopár chýbajúcich hodnôt, ktoré budeme musiet v nasledujúcom kroku doplniť alebo odstrániť. Tieto hodnoty chýbajú z dôvodu spájania dát, pričom jednotlivé tickery neobsahovali hodnotu float.
 
+```{r}
+missing.values <- df %>%
+    gather(key = "key", value = "val") %>%
+    mutate(is.missing = is.na(val)) %>%
+    group_by(key, is.missing) %>%
+    summarise(num.missing = n()) %>%
+    filter(is.missing==T) %>%
+    select(-is.missing) %>%
+    arrange(desc(num.missing)) 
+    
+missing.values  %>% kable()
+```
+ 
 
-## Exploratory data analysis
+## Exploratory data analysis (EDA)
 
 ### Upvote Ratio
 
@@ -268,6 +286,44 @@ ad.test(df$marketCap)
 
 ## Párová analýza
 
+### Korelačná analýza
+
+```{r}
+dfCorr <- df[ , purrr::map_lgl(df, is.numeric)]
+M <-cor(dfCorr)
+corrplot(M, type="upper",
+         col=brewer.pal(n=8, name="RdYlBu"))
+```
+
+
+### Score/Awards/Sentiments/Upvoteratio/Count vs Change
+
+```{r}
+pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = df)
+```
+### Change/Spread/Trough/Peak vs Sentiment
+
+```{r}
+pairs(~ spread + trough + sentiment + peak + change, data = df)
+```
+
+### Score/Awards/Sentiments/Upvoteratio/Count vs Volume
+
+```{r}
+pairs(~ score + awards + sentiment + upvote_ratio + count + Volume, data = df)
+```
+
+### Plus Change vs Score/Awards/Sentiments/Upvoteratio/Count
+
+```{r}
+plusChange <- df[ which(df$change > 0), ]
+pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = plusChange)
+```
+
 ## Prečo sú naše dáta reprezentatívne?
 
+Dôvod prečo sú naše dáta reprezentatívne je nasledovný. Všetky dáta, s ktorými pracujeme sú realné dáta. Dáta z redditu sú získavané pomocou reddit API, takže to niesu žiadne fake data. Podobne aj s stock price, market dátami, ktoré sú tiež reálne. Takže všetky dáta sú realne, nič nieje vymyslené-fake data. Reprezentujú presné chovania stock marketu a zároveň aj správanie sa reddite.
+
 ## Prečo je náš dataset unikátny
+
+Náš dataset je unikátny lebo je uplne novo vytvorený práve pre účel tohoto zadania. Tým že vznikol spojeným dvoch rôznych datasetov, pridaním údajov z yahoo finance a transformáciou do nami potrebného tvaru. 
