@@ -1,1 +1,25 @@
 ## Holyshit
+
+```{r}
+library(rpart.plot)
+library(caret)
+```
+
+
+```{r}
+test <- read.csv("../data/test_dataset.csv")
+train <- read.csv("../data/train_dataset.csv")
+
+fit <- rpart(up ~ score + awards + sentiment + upvote_ratio + count ,
+  maxdepth = 8, 
+  minsplit = 2, 
+  minbucket = 1,
+  data = train,
+  method = 'class')
+
+rpart.plot(fit, extra = 106)
+
+predict_test <- predict(fit, test,type='class')
+confusionMatrix(predict_test,as.factor(test$up))
+```
+

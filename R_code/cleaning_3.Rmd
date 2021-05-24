@@ -2,147 +2,543 @@
 
 Vymazanie riadkov, ktoré majú chybajúce údaje. Tieto údaje sú nedostatkom knižnice Yahoo finance.
 
+```{r}
+df <- read.csv("../data/dataset_final.csv")
+cleanDf <- df[complete.cases(df$float), ]
+```
 
 
 
 ```{r}
-#x <- airquality[complete.cases(airquality), ]
-df <- read.csv("../data/dataset_final.csv")
-tickers <- df %>% group_by(symbol) %>% tally()
-head(tickers)
-top10tickers <- tickers[order(-tickers$n),][1:200,]
-top10tickers$symbol
+bad <- c("A","ON","F","ALL","FOR","IT","NOW","BIG","EOD","PDT","ATH","ARE","PSA","FREE","OR","BE","SHOP","OUT","NEW","WORK","IQ","NEXT","HAS","CAN","SO","BY","NET","REAL","PUMP","GDP","GOOD","HUGE","RIOT","LIVE","HEAR","POST","RIDE","SAVE","IMO","VERY","EVER","ANY","HE","EDIT","STAY","SHIP","WELL","HOME","BOOM","OPEN","GAIN","SEE","LIFE", "DD")
+cleanDf <- cleanDf[(!is.element(cleanDf$symbol, bad) & nchar(cleanDf$symbol)>1),]
 
-bad <- c("A","ON","F","ALL","FOR","IT","NOW","BIG","EOD","PDT","ATH","ARE","PSA","FREE","OR","BE","SHOP","OUT","NEW","WORK","IQ","NEXT","HAS","CAN","SO","BY","NET","REAL","PUMP","GDP","GOOD","HUGE","RIOT","LIVE","HEAR","POST","RIDE","SAVE","IMO","VERY","EVER","ANY","HE","EDIT","STAY","SHIP","WELL","HOME","BOOM","OPEN","GAIN","SEE","LIFE")
-
-# odstran vsetky tickery z vektora bad a vsetky tickery dlzky 1
-cleaned <- df[(!is.element(df$symbol, bad) & nchar(df$symbol)>1),]
+cleanDf$up <- sapply(cleanDf$change, function(x) { if (x > 0) T else F } ) 
+describe(cleanDf)
 ```
 
 
 ### Normalizácia
 
 ```{r}
-# upvote ratio, moze byt negativne???
-x <- sapply(df$upvote_ratio,customLogTransform)
-hist(x)
-boxplot(x)
-```
-```{r}
-# score, 	Outlier (-Inf) in boxplot 1 is not drawn
-customLogTransform <- function(x){
-  if (x > 0){
-    log(x)
-  }
-  else if (x < 0)
-    log(abs(x)) * -1
-  else 
-    0
-}
-x <- sapply(df$score,customLogTransform)
-hist(x)
-boxplot(x)
-```
-```{r}
-x <- sapply(df$awards,customLogTransform)
-hist(x)
-boxplot(x)
-```
-```{r}
+# upvote ratio min = 0
+cleanDf$upvote_ratio <- sapply(cleanDf$upvote_ratio,customLogTransformZero)
+# score min = -4924
+cleanDf$score <- sapply(cleanDf$score,customLogTransformNegative)
+# awards min = 0
+cleanDf$awards <- sapply(cleanDf$awards,customLogTransformZero)
+# sentiment min = -1008.051
+cleanDf$sentiment <- sapply(cleanDf$sentiment,customLogTransformNegative)
+# count min = 1
+cleanDf$count <- sapply(cleanDf$count,customLogTransform)
+# min > 0
+cleanDf$High <- sapply(cleanDf$High,customLogTransform)
+cleanDf$Open <- sapply(cleanDf$Open,customLogTransform)
+cleanDf$Low <- sapply(cleanDf$Low,customLogTransform)
+cleanDf$Close <- sapply(cleanDf$Close,customLogTransform)
+cleanDf$Adj.Close <- sapply(cleanDf$Adj.Close,customLogTransform)
+cleanDf$Volume <- sapply(cleanDf$Volume,customLogTransform)
+cleanDf$float <- sapply(cleanDf$float,customLogTransform)
+# min = 0
+cleanDf$spread <- sapply(cleanDf$spread,customLogTransformZero)
+cleanDf$change <- sapply(cleanDf$change,customLogTransformZero)
+cleanDf$peak <- sapply(cleanDf$peak,customLogTransformZero)
+cleanDf$peak <- sapply(cleanDf$peak,customLogTransformZero)
+cleanDf$trough <- sapply(cleanDf$trough,customLogTransformZero)
+# min > 0
+cleanDf$min7 <- sapply(cleanDf$min7,customLogTransform)
+cleanDf$max7 <- sapply(cleanDf$max7,customLogTransform)
+cleanDf$min30 <- sapply(cleanDf$min30,customLogTransform)
+cleanDf$max30 <- sapply(cleanDf$max30,customLogTransform)
+cleanDf$max7plus <- sapply(cleanDf$max7plus,customLogTransform)
+cleanDf$min7plus <- sapply(cleanDf$min7plus,customLogTransform)
+cleanDf$marketCap <- sapply(cleanDf$marketCap,customLogTransform)
 
-x <- sapply(df$sentiment,customLogTransform)
-hist(x)
-boxplot(x)
-```
-
- 
-```{r}
-
-x <- sapply(df$count,customLogTransform)
-hist(x)
-boxplot(x)
-```
-```{r}
-x <- log(df$High)
-hist(x)
-boxplot(x)
-
-x <- log(df$Open)
-hist(x)
-boxplot(x)
-
-x <- log(df$Low)
-hist(x)
-boxplot(x)
-
-x <- log(df$Close)
-hist(x)
-boxplot(x)
-
-x <- log(df$Adj.Close)
-hist(x)
-boxplot(x)
-
-x <- log(df$Volume)
-hist(x)
-boxplot(x)
-
-x <- log(df$float)
-hist(x)
-boxplot(x)
-
-
-```
-
-```{r}
-x <- sapply(df$spread ,customLogTransform)
-hist(x)
-boxplot(x)
-
-x <- sapply(df$change ,customLogTransform)
-hist(x)
-boxplot(x)
-
-x <- sapply(df$peak ,customLogTransform)
-hist(x)
-boxplot(x)
-
-x <- sapply(df$trough ,customLogTransform)
-hist(x)
-boxplot(x)
-```
-```{r}
-x <- log(df$min7)
-hist(x)
-boxplot(x)
-
-x <- log(df$max7)
-hist(x)
-boxplot(x)
-
-x <- log(df$min30)
-hist(x)
-boxplot(x)
-
-x <- log(df$max30)
-hist(x)
-boxplot(x)
-
-x <- log(df$max7plus)
-hist(x)
-boxplot(x)
-
-x <- log(df$min7plus)
-hist(x)
-boxplot(x)
-
-x <- log(df$marketCap)
-hist(x)
-boxplot(x)
+#write.csv(cleanDf,'../data/clean_dataset.csv')
 
 ```
 
 
 ### Trening - test split
 
+```{r}
+df <- read.csv("../data/clean_dataset.csv")
+## 75% of the sample size
+smp_size <- floor(0.75 * nrow(df))
+
+## set the seed to make your partition reproducible
+set.seed(123)
+train_ind <- sample(seq_len(nrow(df)), size = smp_size)
+
+train <- df[train_ind, ]
+test <- df[-train_ind, ]
+#write.csv(train,'../data/train_dataset.csv')
+#write.csv(test,'../data/test_dataset.csv')
+```
+
+
 ## Exploratory data analysis 2 (EDA)
+
+```{r}
+df <- read.csv("../data/clean_dataset.csv")
+```
+
+### Upvote Ratio
+
+
+```{r}
+describe(df$upvote_ratio)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=upvote_ratio)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=upvote_ratio)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=upvote_ratio)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=upvote_ratio)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+
+### Symbol
+
+```{r}
+length(unique(df$symbol))
+```
+
+```{r}
+tickers <- df %>% group_by(symbol) %>% tally()
+head(tickers)
+ggplot(data=tickers, aes(x=symbol, y=n)) +
+  geom_bar(stat="identity")
+```
+```{r}
+top10tickers <- tickers[order(-tickers$n),][1:10,]
+ggplot(data=top10tickers, aes(x=symbol, y=n)) + geom_bar(stat="identity")
+```
+
+### Date
+
+```{r}
+cat("Prvy datum :",head(df$date,1),"\nPosledny datum :",tail(df$date,1))
+```
+
+
+### Score
+
+```{r}
+describe(df$score)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=score)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=score)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=score)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=score)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Awards
+
+```{r}
+describe(df$awards)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=awards)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=awards)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=awards)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=awards)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Sentiment
+
+
+```{r}
+describe(df$sentiment)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=sentiment)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=sentiment)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=sentiment)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=sentiment)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Count
+
+
+```{r}
+describe(df$count)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=count)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=count)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=count)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=count)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Open
+
+
+```{r}
+describe(df$Open)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Open)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Open)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Open)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Open)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### High
+
+
+```{r}
+describe(df$High)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=High)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=High)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=High)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=High)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Low
+
+
+```{r}
+describe(df$Low)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Low)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Low)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Low)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Low)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Close
+
+```{r}
+describe(df$Close)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Close)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Close)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Close)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Close)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Adj.Close
+
+
+```{r}
+describe(df$Adj.Close)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Adj.Close)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Adj.Close)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Adj.Close)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Adj.Close)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Volume
+
+
+```{r}
+describe(df$Volume)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Volume)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Volume)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Volume)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Volume)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Float
+
+
+```{r}
+describe(df$float)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=float)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=float)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=float)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=float)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Spread
+
+
+```{r}
+describe(df$spread)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=spread)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=spread)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=spread)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=spread)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Change
+
+
+```{r}
+describe(df$change)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=change)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=change)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=change)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=change)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Peak
+
+
+```{r}
+describe(df$peak)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=peak)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=peak)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=peak)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=peak)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Trough
+
+
+```{r}
+describe(df$trough)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=trough)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=trough)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=trough)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=trough)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Min7 - days
+
+
+```{r}
+describe(df$min7)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=min7)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=min7)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=min7)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=min7)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+
+### Max7 - days
+
+
+```{r}
+describe(df$max7)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=max7)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=max7)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=max7)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=max7)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Min30 - days
+
+
+```{r}
+describe(df$min30)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=min30)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=min30)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=min30)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=min30)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Max 30- days
+
+
+```{r}
+describe(df$max30)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=max30)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=max30)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=max30)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=max30)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Max7Plus - days
+
+
+```{r}
+describe(df$max7plus)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=max7plus)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=max7plus)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=max7plus)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=max7plus)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Min7Plus - days
+
+
+```{r}
+describe(df$min7plus)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=min7plus)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=min7plus)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=min7plus)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=min7plus)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+### Marketcap
+
+
+```{r}
+describe(df$marketCap)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=marketCap)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=marketCap)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=marketCap)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=marketCap)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+## Párová analýza
+
+```{r}
+gmeDf <- df[df$symbol == "GME",]
+```
+
+
+### Korelačná analýza
+
+```{r}
+dfCorr <- df[ , purrr::map_lgl(df, is.numeric)]
+M <-cor(dfCorr,method="spearman")
+corrplot(M, type="upper",
+         col=brewer.pal(n=8, name="RdYlBu"))
+```
+
+
+### Score/Awards/Sentiments/Upvoteratio/Count vs Change
+
+```{r}
+pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = df)
+pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = gmeDf)
+```
+### Change/Spread/Trough/Peak vs Sentiment
+
+```{r}
+pairs(~ spread + trough + peak + change + sentiment, data = df)
+pairs(~ spread + trough + peak + change + sentiment, data = gmeDf)
+```
+
+### Score/Awards/Sentiments/Upvoteratio/Count vs Volume
+
+```{r}
+pairs(~ score + awards + sentiment + upvote_ratio + count + Volume, data = df)
+pairs(~ score + awards + sentiment + upvote_ratio + count + Volume, data = gmeDf)
+```
+
+### Plus Change vs Score/Awards/Sentiments/Upvoteratio/Count
+
+```{r}
+plusChange <- df[ which(df$change > 0), ]
+plusChangeGme <- gmeDf[which(gmeDf$change > 0),]
+pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = plusChange)
+pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = plusChangeGme)
+```
