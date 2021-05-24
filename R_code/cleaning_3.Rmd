@@ -7,10 +7,16 @@ Vymazanie riadkov, ktoré majú chybajúce údaje. Tieto údaje sú nedostatkom 
 
 ```{r}
 #x <- airquality[complete.cases(airquality), ]
+df <- read.csv("../data/dataset_final.csv")
 tickers <- df %>% group_by(symbol) %>% tally()
 head(tickers)
 top10tickers <- tickers[order(-tickers$n),][1:200,]
 top10tickers$symbol
+
+bad <- c("A","ON","F","ALL","FOR","IT","NOW","BIG","EOD","PDT","ATH","ARE","PSA","FREE","OR","BE","SHOP","OUT","NEW","WORK","IQ","NEXT","HAS","CAN","SO","BY","NET","REAL","PUMP","GDP","GOOD","HUGE","RIOT","LIVE","HEAR","POST","RIDE","SAVE","IMO","VERY","EVER","ANY","HE","EDIT","STAY","SHIP","WELL","HOME","BOOM","OPEN","GAIN","SEE","LIFE")
+
+# odstran vsetky tickery z vektora bad a vsetky tickery dlzky 1
+cleaned <- df[(!is.element(df$symbol, bad) & nchar(df$symbol)>1),]
 ```
 
 
