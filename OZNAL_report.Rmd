@@ -38,7 +38,7 @@ Témou projektu je predikcia zmeny hodnoty akcie na základe vyplyvu populárneh
 
 * Directory/
 
-  * Data/ - zložka s jednotlivými datasetmi
+  * Data/ - zložka s jednotlivými datasetmi, treba ju stiahnut z linku - https://drive.google.com/file/d/1sD7gJdQ0WKiNViNIeVZ1200NQ6Mbg3sV/view?usp=sharing . Zip staci rozipovat a nahranit nim data.
 
   * R_code/ - zložka s jednotlívými súbormi Rkového kódu
 
@@ -73,8 +73,10 @@ Tretia kapitola, v ktorej sa venujeme čisteniu a opravovaniu datasetu na zákla
 
 # Štatistické učenie, zhlukové analýzy a nachádzanie vnútorných vzorcov v dátach
 
-```{r child = 'R_code/modeling_4.Rmd'}
+Kapitola v ktorej sa snažíme vytvárať modely strojového učenia a aplikovať ich na naše dáta.
 
+```{r}
+# nejakeho dovodu je tato cast v samostatnom subore lebo nesla skompilovat
 ```
 
 

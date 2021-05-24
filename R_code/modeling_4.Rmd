@@ -1,10 +1,16 @@
-## Holyshit
+## Model
 
-```{r}
+```{r echo = T, results = 'hide', message = FALSE, warning = FALSE}
 library(rpart.plot)
 library(caret)
+library('relaimpo')
+library(cluster)    
+library(dplyr)
+library(factoextra)
 ```
+### Model klasifikacneho algoritmus
 
+Ako klasifikator sme skusili pouzit random forest. Pricom sme kvoli kvalifikacii museli vytvorit novy stlpec up. Ktory je true false podla toho ci dany stock rastie alebo klesa v ten den. Avsak klasifikacny model pre nas dataset nieje prave vhodny. Tak vysledky su velmi nepreprezentativne.
 
 ```{r}
 test <- read.csv("../data/test_dataset.csv")
@@ -17,9 +23,37 @@ fit <- rpart(up ~ score + awards + sentiment + upvote_ratio + count ,
   data = train,
   method = 'class')
 
-rpart.plot(fit, extra = 106)
+rpart.plot(fit)
 
 predict_test <- predict(fit, test,type='class')
 confusionMatrix(predict_test,as.factor(test$up))
+```
+
+### Model clusteringu
+
+Ako model clusteringu sme skusli pouzit kmeans s 2 clustrami. Ktore sa snazime naucit na z atributov redditu a stlpca change rozdelit do 2 skupin podla toho ci rastie dana hodnota alebo nie. Celkovo to nevyzera ako dobre pouzitie pre nas pripad.
+
+```{r}
+# test <- read.csv("../data/test_dataset.csv")
+# train <- read.csv("../data/train_dataset.csv")
+
+x = select(train,change,awards,sentiment,upvote_ratio,count)
+k3 <- kmeans(x, centers = 2)
+fviz_cluster(k3, geom = "point",  data = x) + ggtitle("k = 2")
+```
+
+
+```{r}
+test <- read.csv("../data/test_dataset.csv")
+train <- read.csv("../data/train_dataset.csv")
+
+control <- trainControl(method="cv", number=10)
+metric <- "Accuracy"
+
+
+set.seed(7)
+fit <- lm(sentiment ~ change + max7 + Open + max30 + min7 + min30, data=train)
+
+summary(fit)
 ```
 

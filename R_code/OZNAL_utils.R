@@ -1,17 +1,3 @@
-# NAHRADIT SENTIMENT ZA NAZOV STLPCA
-# qqplot
-# ggplot(d, mapping = aes(sample=sentiment)) + stat_qq() + stat_qq_line()
-# 
-# # boxplot 
-# ggplot(d, aes(x=log(sentiment))) + geom_boxplot(notch=TRUE) + coord_flip()
-# 
-# # histogram
-# ggplot(d, aes(x=log(sentiment))) + geom_histogram(color="black", fill="white")
-# 
-# # density estimate
-# ggplot(d, aes(x=log(sentiment))) + geom_density(color="black", fill="pink", alpha=.3)
-
-
 customLogTransformNegative <- function(x){
   value <- abs(min(x))
   log(x+1+value)
@@ -40,5 +26,3 @@ description <- function(col){
   desc$iqr <-  IQR(col)
   return(desc)
 }
-# 
-# # print stats
