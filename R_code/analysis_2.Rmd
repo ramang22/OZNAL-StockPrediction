@@ -1,5 +1,5 @@
 
-```{r}
+```{r echo = T, results = 'hide'}
 # imports
 source("../R_code/OZNAL_utils.R")
 library("readxl")
