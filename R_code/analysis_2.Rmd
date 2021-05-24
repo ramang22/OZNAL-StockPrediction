@@ -236,7 +236,18 @@ missing.values  %>% kable()
 
 ## Exploratory data analysis (EDA)
 
+Pre každý stĺpec sme spravili samostatnú EDA analýzu, ktorá obsahuje opis štatistických hodnôt jednotlivého stĺpca a 4 grafy. 
+
+* QQPlot - hovorí o tom ako je rozdelenie odlišné od norm. rozdelenia
+* Boxplot - graficky zobrazí štatisického hodnoty daného stĺpca, môžeme na ňom sledovať možných outlayerov
+* Histogram - ukazuje nám rozdelenie stĺpca 
+* Graf hustoty
+
+Následne pre každý stĺpec zhrnieme problémy alebo zaujímavosti, ktoré sme objavili. 
+
 ### Upvote Ratio
+
+Kedže hovorí o pomere $upvote/downvote$, tak sme nezistili žiadnych chybných outlayerov. Bude potrebné dáta trošku transformovať, normalizovať.
 
 ```{r}
 describe(df$upvote_ratio)
@@ -255,6 +266,7 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Symbol
 
+Je to kategorická premenná, pri ktorej EDA analýze sme nemohli využit numerické grafy. Taktiež sme zistili že v datasete máme veľký bias v podobe jednotlivých symbolov. Pri tvorbe datasetu sme nedbali na to že jednotlivé symboly môžu reprezentovať aj anglické slová. Takže tieto symboly, ktoré sú aj anglické slová musíme odstrániť v nasledujúcom kroku.
 ```{r}
 length(unique(df$symbol))
 ```
@@ -272,12 +284,16 @@ ggplot(data=top10tickers, aes(x=symbol, y=n)) + geom_bar(stat="identity")
 
 ### Date
 
+Dátum, premenná len na reprezentáciu času v dátach. 
+
 ```{r}
 cat("Prvy datum :",head(df$date,1),"\nPosledny datum :",tail(df$date,1))
 ```
 
 
 ### Score
+
+Premenná skóre môže obsahovať aj negatívne a aj pozitívne hodnoty, jednotlivý outlayeri na boxplote niesu outlayeri ale sú to len príspevky, ktoré boli vysoko hodnotené. Avšak daný stĺpec bude treba normalizovať.
 
 ```{r}
 describe(df$score)
@@ -295,6 +311,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Awards
 
+Táto premmená nemôže byť záporná ale nenachádzajú sa tu žiadne záporne hodnoty. Takže stĺpec je v poriadku avšak bude treba normalizovať.
+
 ```{r}
 describe(df$awards)
 ```
@@ -310,6 +328,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Sentiment
+
+Sentiment podobne ako skóre môže dosahovať kladnú ale aj zápornú hodnotu ale nemá obmedzenie. Stĺpec bude treba normalizovať.
 
 ```{r}
 describe(df$sentiment)
@@ -327,6 +347,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Count
 
+Count by nemal byť záporný a ani nulový čo je v poriadku avšak stĺpec bude treba normalizovať.
+
 ```{r}
 describe(df$count)
 ```
@@ -342,6 +364,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Open
+
+Jednotlivé hodnoty tohto stĺpca by nemali súvisieť medzi sebou. Treba normalizovať.
 
 ```{r}
 describe(df$Open)
@@ -359,6 +383,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### High
 
+Jednotlivé hodnoty tohto stĺpca by nemali súvisieť medzi sebou. Treba normalizovať.
+
 ```{r}
 describe(df$High)
 ```
@@ -374,6 +400,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Low
+
+Jednotlivé hodnoty tohto stĺpca by nemali súvisieť medzi sebou. Treba normalizovať.
 
 ```{r}
 describe(df$Low)
@@ -391,6 +419,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Close
 
+Jednotlivé hodnoty tohto stĺpca by nemali súvisieť medzi sebou. Treba normalizovať.
+
 ```{r}
 describe(df$Close)
 ```
@@ -406,6 +436,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Adj.Close
+
+Jednotlivé hodnoty tohto stĺpca by nemali súvisieť medzi sebou. Treba normalizovať.
 
 ```{r}
 describe(df$Adj.Close)
@@ -423,6 +455,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Volume
 
+Jednotlivé hodnoty tohto stĺpca by nemali súvisieť medzi sebou. Treba normalizovať.
+
 ```{r}
 describe(df$Volume)
 ```
@@ -438,6 +472,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Float
+
+Obsahuje nan hodnoty, ktoré treba poriešiť asi vymazaním nan riadkov.
 
 ```{r}
 describe(df$float)
@@ -455,6 +491,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Spread
 
+Stĺpec je potrebné normalizovať.
+
 ```{r}
 describe(df$spread)
 ```
@@ -470,6 +508,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Change
+
+Stĺpec je potrebné normalizovať.
 
 ```{r}
 describe(df$change)
@@ -487,6 +527,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Peak
 
+Stĺpec je potrebné normalizovať.
+
 ```{r}
 describe(df$peak)
 ```
@@ -503,6 +545,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Trough
 
+Stĺpec je potrebné normalizovať.
+
 ```{r}
 describe(df$trough)
 ```
@@ -518,6 +562,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Min7 - days
+
+Stĺpec je potrebné normalizovať.
 
 ```{r}
 describe(df$min7)
@@ -536,6 +582,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Max7 - days
 
+Stĺpec je potrebné normalizovať.
+
 ```{r}
 describe(df$max7)
 ```
@@ -551,6 +599,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Min30 - days
+
+Stĺpec je potrebné normalizovať.
 
 ```{r}
 describe(df$min30)
@@ -568,6 +618,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Max 30- days
 
+Stĺpec je potrebné normalizovať.
+
 ```{r}
 describe(df$max30)
 ```
@@ -583,6 +635,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Max7Plus - days
+
+Stĺpec je potrebné normalizovať.
 
 ```{r}
 describe(df$max7plus)
@@ -600,6 +654,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ### Min7Plus - days
 
+Stĺpec je potrebné normalizovať.
+
 ```{r}
 describe(df$min7plus)
 ```
@@ -615,6 +671,8 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 ```
 
 ### Marketcap
+
+Podobne ako float obashuje NaN hodnoty, ktoré je potrebné odstrániť.
 
 ```{r}
 describe(df$marketCap)
@@ -632,11 +690,15 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 ## Párová analýza
 
+Na základe párovej analýzy jednotlivých stĺpcov, ktoré súvysia s definovanými hypotézami je veľmi tažké usúdiť či jednotlivé stĺpce spolu súvisia. Párová analýza môže vyzerať lepšie po normalizovaný dát. Taktiež je dobré doplniť nový stĺpec "šumu", ktorý by reprezentoval Score/Awards/Sentiments/Upvoteratio/Count.
+
 ### Korelačná analýza
+
+Korelačná heatmapa, nám ukazuje náznaky korelácie či už kladnej alebo zápornej. Taktiež je zaujimáve ako sa zmení korelácia po upráve dát v 3 časti - čistenie dát. Aj keď pri korelácii je využitá spearmenova korelácia, na ktorú by nemala mať vplyv na normalizácia. 
 
 ```{r}
 dfCorr <- df[ , purrr::map_lgl(df, is.numeric)]
-M <-cor(dfCorr)
+M <-cor(dfCorr,method="spearman")
 corrplot(M, type="upper",
          col=brewer.pal(n=8, name="RdYlBu"))
 ```
