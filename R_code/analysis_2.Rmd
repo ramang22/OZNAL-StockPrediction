@@ -11,6 +11,8 @@ library(RColorBrewer)
 library(tidyverse)
 library(gridExtra)
 library(knitr)
+library(psych)
+
 `%>%` <- magrittr::`%>%` # pipe operátor
 ```
  
@@ -236,53 +238,397 @@ missing.values  %>% kable()
 
 ### Upvote Ratio
 
+```{r}
+describe(df$upvote_ratio)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=upvote_ratio)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=upvote_ratio)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=upvote_ratio)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=upvote_ratio)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+
 ### Symbol
+
+```{r}
+length(unique(df$symbol))
+```
+
+```{r}
+tickers <- df %>% group_by(symbol) %>% tally()
+head(tickers)
+ggplot(data=tickers, aes(x=symbol, y=n)) +
+  geom_bar(stat="identity")
+```
+```{r}
+top10tickers <- tickers[order(-tickers$n),][1:10,]
+ggplot(data=top10tickers, aes(x=symbol, y=n)) + geom_bar(stat="identity")
+```
 
 ### Date
 
+```{r}
+cat("Prvy datum :",head(df$date,1),"\nPosledny datum :",tail(df$date,1))
+```
+
+
 ### Score
+
+```{r}
+describe(df$score)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=score)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=score)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=score)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=score)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### Awards
 
+```{r}
+describe(df$awards)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=awards)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=awards)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=awards)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=awards)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Sentiment
+
+```{r}
+describe(df$sentiment)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=sentiment)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=sentiment)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=sentiment)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=sentiment)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### Count
 
+```{r}
+describe(df$count)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=count)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=count)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=count)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=count)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Open
+
+```{r}
+describe(df$Open)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Open)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Open)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Open)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Open)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### High
 
+```{r}
+describe(df$High)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=High)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=High)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=High)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=High)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Low
+
+```{r}
+describe(df$Low)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Low)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Low)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Low)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Low)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### Close
 
+```{r}
+describe(df$Close)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Close)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Close)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Close)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Close)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Adj.Close
+
+```{r}
+describe(df$Adj.Close)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Adj.Close)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Adj.Close)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Adj.Close)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Adj.Close)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### Volume
 
+```{r}
+describe(df$Volume)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=Volume)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=Volume)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=Volume)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=Volume)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Float
+
+```{r}
+describe(df$float)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=float)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=float)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=float)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=float)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### Spread
 
+```{r}
+describe(df$spread)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=spread)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=spread)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=spread)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=spread)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Change
+
+```{r}
+describe(df$change)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=change)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=change)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=change)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=change)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### Peak
 
+```{r}
+describe(df$peak)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=peak)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=peak)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=peak)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=peak)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Trough
+
+```{r}
+describe(df$trough)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=trough)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=trough)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=trough)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=trough)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### Min7 - days
 
+```{r}
+describe(df$min7)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=min7)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=min7)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=min7)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=min7)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
+
 ### Max7 - days
+
+```{r}
+describe(df$max7)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=max7)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=max7)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=max7)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=max7)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### Min30 - days
 
+```{r}
+describe(df$min30)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=min30)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=min30)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=min30)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=min30)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Max 30- days
+
+```{r}
+describe(df$max30)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=max30)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=max30)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=max30)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=max30)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ### Max7Plus - days
 
+```{r}
+describe(df$max7plus)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=max7plus)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=max7plus)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=max7plus)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=max7plus)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Min7Plus - days
 
+```{r}
+describe(df$min7plus)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=min7plus)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=min7plus)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=min7plus)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=min7plus)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
+
 ### Marketcap
+
+```{r}
+describe(df$marketCap)
+```
+
+
+```{r}
+p1 <- ggplot(df, mapping = aes(sample=marketCap)) + stat_qq() + stat_qq_line()
+p2 <- ggplot(df, aes(x=marketCap)) + geom_boxplot(notch=TRUE) + coord_flip()
+p3 <- ggplot(df, aes(x=marketCap)) + geom_histogram(color="black", fill="white")
+p4 <- ggplot(df, aes(x=marketCap)) + geom_density(color="black", fill="pink", alpha=.3)
+
+grid.arrange(p1, p2,p3,p4, nrow = 2)
+```
 
 ## Párová analýza
 

@@ -1,29 +1,30 @@
-
-test <- function (){
-  print("kappa")
-}
-
-head(df)
-
-getBestValue <- function(){
-  df <- read.csv("data/dataset_final.csv")
-  df <- df[,-2]
-  repre <- df[df$symbol == 'AAPL',]
-}
-
-customBoxPlot <-function(){
-  boxplot(df$score)
-}
-
-customBoxPlot()
-best <- getBestValue()
-head(best)
+# NAHRADIT SENTIMENT ZA NAZOV STLPCA
+# qqplot
+# ggplot(d, mapping = aes(sample=sentiment)) + stat_qq() + stat_qq_line()
 # 
-# 2. Q-Q Plot
-# 3. Boxplot - vsetky
-# 4. Histogram - vsetky
-# 5. Graf odhadu hustoty
-# 6. Graf spicatosti
-# P-Q plot
-# Graf rozptylu 
-# stock graf - svieckovy - vsetky
+# # boxplot 
+# ggplot(d, aes(x=log(sentiment))) + geom_boxplot(notch=TRUE) + coord_flip()
+# 
+# # histogram
+# ggplot(d, aes(x=log(sentiment))) + geom_histogram(color="black", fill="white")
+# 
+# # density estimate
+# ggplot(d, aes(x=log(sentiment))) + geom_density(color="black", fill="pink", alpha=.3)
+
+
+# pomocne funkcie
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+description <- function(col){
+  desc <- describe(col)
+  desc$var_coef <-  sd(col)/mean(col)*100
+  desc$med <- median(col)
+  desc$mode <-  getmode(col)
+  desc$iqr <-  IQR(col)
+  return(desc)
+}
+# 
+# # print stats

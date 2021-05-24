@@ -7,8 +7,10 @@ Vymazanie riadkov, ktoré majú chybajúce údaje. Tieto údaje sú nedostatkom 
 
 ```{r}
 #x <- airquality[complete.cases(airquality), ]
-
-
+tickers <- df %>% group_by(symbol) %>% tally()
+head(tickers)
+top10tickers <- tickers[order(-tickers$n),][1:200,]
+top10tickers$symbol
 ```
 
 
