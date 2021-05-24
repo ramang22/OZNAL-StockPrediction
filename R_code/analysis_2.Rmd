@@ -692,6 +692,11 @@ grid.arrange(p1, p2,p3,p4, nrow = 2)
 
 Na základe párovej analýzy jednotlivých stĺpcov, ktoré súvysia s definovanými hypotézami je veľmi tažké usúdiť či jednotlivé stĺpce spolu súvisia. Párová analýza môže vyzerať lepšie po normalizovaný dát. Taktiež je dobré doplniť nový stĺpec "šumu", ktorý by reprezentoval Score/Awards/Sentiments/Upvoteratio/Count.
 
+```{r}
+gmeDf <- df[df$symbol == "GME",]
+```
+
+
 ### Korelačná analýza
 
 Korelačná heatmapa, nám ukazuje náznaky korelácie či už kladnej alebo zápornej. Taktiež je zaujimáve ako sa zmení korelácia po upráve dát v 3 časti - čistenie dát. Aj keď pri korelácii je využitá spearmenova korelácia, na ktorú by nemala mať vplyv na normalizácia. 
@@ -706,26 +711,33 @@ corrplot(M, type="upper",
 
 ### Score/Awards/Sentiments/Upvoteratio/Count vs Change
 
+
+
 ```{r}
 pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = df)
+pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = gmeDf)
 ```
 ### Change/Spread/Trough/Peak vs Sentiment
 
 ```{r}
-pairs(~ spread + trough + sentiment + peak + change, data = df)
+pairs(~ spread + trough + peak + change + sentiment, data = df)
+pairs(~ spread + trough + peak + change + sentiment, data = gmeDf)
 ```
 
 ### Score/Awards/Sentiments/Upvoteratio/Count vs Volume
 
 ```{r}
 pairs(~ score + awards + sentiment + upvote_ratio + count + Volume, data = df)
+pairs(~ score + awards + sentiment + upvote_ratio + count + Volume, data = gmeDf)
 ```
 
 ### Plus Change vs Score/Awards/Sentiments/Upvoteratio/Count
 
 ```{r}
 plusChange <- df[ which(df$change > 0), ]
+plusChangeGme <- gmeDf[which(gmeDf$change > 0),]
 pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = plusChange)
+pairs(~ score + awards + sentiment + upvote_ratio + count + change, data = plusChangeGme)
 ```
 
 ## Prečo sú naše dáta reprezentatívne?
