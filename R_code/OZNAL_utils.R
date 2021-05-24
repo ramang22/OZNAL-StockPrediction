@@ -12,6 +12,20 @@
 # ggplot(d, aes(x=log(sentiment))) + geom_density(color="black", fill="pink", alpha=.3)
 
 
+customLogTransformNegative <- function(x){
+  value <- abs(min(x))
+  log(x+1+value)
+}
+
+customLogTransformZero <- function(x){
+  log(x+1)
+}
+
+customLogTransform <- function(x){
+  log(x)
+}
+
+
 # pomocne funkcie
 getmode <- function(v) {
   uniqv <- unique(v)
