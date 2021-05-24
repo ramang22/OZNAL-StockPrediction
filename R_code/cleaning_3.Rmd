@@ -1,1 +1,142 @@
-## Holyshit
+## Čistenie datasetu
+
+Vymazanie riadkov, ktoré majú chybajúce údaje. Tieto údaje sú nedostatkom knižnice Yahoo finance.
+
+
+
+
+```{r}
+#x <- airquality[complete.cases(airquality), ]
+tickers <- df %>% group_by(symbol) %>% tally()
+head(tickers)
+top10tickers <- tickers[order(-tickers$n),][1:200,]
+top10tickers$symbol
+```
+
+
+### Normalizácia
+
+```{r}
+# upvote ratio, moze byt negativne???
+x <- sapply(df$upvote_ratio,customLogTransform)
+hist(x)
+boxplot(x)
+```
+```{r}
+# score, 	Outlier (-Inf) in boxplot 1 is not drawn
+customLogTransform <- function(x){
+  if (x > 0){
+    log(x)
+  }
+  else if (x < 0)
+    log(abs(x)) * -1
+  else 
+    0
+}
+x <- sapply(df$score,customLogTransform)
+hist(x)
+boxplot(x)
+```
+```{r}
+x <- sapply(df$awards,customLogTransform)
+hist(x)
+boxplot(x)
+```
+```{r}
+
+x <- sapply(df$sentiment,customLogTransform)
+hist(x)
+boxplot(x)
+```
+
+ 
+```{r}
+
+x <- sapply(df$count,customLogTransform)
+hist(x)
+boxplot(x)
+```
+```{r}
+x <- log(df$High)
+hist(x)
+boxplot(x)
+
+x <- log(df$Open)
+hist(x)
+boxplot(x)
+
+x <- log(df$Low)
+hist(x)
+boxplot(x)
+
+x <- log(df$Close)
+hist(x)
+boxplot(x)
+
+x <- log(df$Adj.Close)
+hist(x)
+boxplot(x)
+
+x <- log(df$Volume)
+hist(x)
+boxplot(x)
+
+x <- log(df$float)
+hist(x)
+boxplot(x)
+
+
+```
+
+```{r}
+x <- sapply(df$spread ,customLogTransform)
+hist(x)
+boxplot(x)
+
+x <- sapply(df$change ,customLogTransform)
+hist(x)
+boxplot(x)
+
+x <- sapply(df$peak ,customLogTransform)
+hist(x)
+boxplot(x)
+
+x <- sapply(df$trough ,customLogTransform)
+hist(x)
+boxplot(x)
+```
+```{r}
+x <- log(df$min7)
+hist(x)
+boxplot(x)
+
+x <- log(df$max7)
+hist(x)
+boxplot(x)
+
+x <- log(df$min30)
+hist(x)
+boxplot(x)
+
+x <- log(df$max30)
+hist(x)
+boxplot(x)
+
+x <- log(df$max7plus)
+hist(x)
+boxplot(x)
+
+x <- log(df$min7plus)
+hist(x)
+boxplot(x)
+
+x <- log(df$marketCap)
+hist(x)
+boxplot(x)
+
+```
+
+
+### Trening - test split
+
+## Exploratory data analysis 2 (EDA)
